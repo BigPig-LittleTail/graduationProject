@@ -8,6 +8,7 @@ import hit.zhou.nlp.text.TFIDF;
 import okhttp3.OkHttpClient;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class FileTest {
@@ -22,7 +23,7 @@ public class FileTest {
 
     private static final String TYPE = "dependent";
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException,InterruptedException, ExecutionException {
         OkHttpClient okHttpClient =  new OkHttpClient.Builder()
                 .connectTimeout(10000L, TimeUnit.MILLISECONDS)
                 .readTimeout(10000L,TimeUnit.MILLISECONDS)
@@ -89,18 +90,20 @@ public class FileTest {
 //            System.out.println(wordCount.getWord() + "," + wordCount.getCountNum());
 //        }
 
-        Dir dir = new Dir("C:/Users/zhou/Desktop/loyal/");
-        TFIDF tfidf = new TFIDF(dir,ltpBaseOpLocal,"C:/Users/zhou/Desktop/stop_words.txt");
+        Dir dir = new Dir("C:/Users/zhou/Desktop/zhou/");
+        TFIDF tfidf = new TFIDF(dir,"C:/Users/zhou/Desktop/stop_words.txt");
 //        tfidf.setKeyWordListToMyFile(10,"1.txt");
 //        tfidf.setKeyWordListToMyFile(10,"xian.txt");
 //        tfidf.setKeyWordListToMyFile(10,"test.docx");
-        tfidf.setAllKeyWordListToAllFile(10);
-
-//        dir.saveDirFileKeyWordResultToFile("1.txt","C:/Users/zhou/Desktop/haha/");
-        dir.saveDirAllFileKeyWordResult("C:/Users/zhou/Desktop/haha/");
 
 
-        return;
-
+        tfidf.getAllFileKeyWordList(10,
+                tfidf.getAllFileMap2Rate(ltpBaseOpLocal,"C:/Users/zhou/Desktop/wawa/","C:/Users/zhou/Desktop/wawa/"),
+                "C:/Users/zhou/Desktop/wawa/","C:/Users/zhou/Desktop/wawa/");
+//        tfidf.setAllKeyWordListToAllFile(10);
+//
+////        dir.saveDirFileKeyWordResultToFile("1.txt","C:/Users/zhou/Desktop/haha/");
+//        dir.saveDirAllFileKeyWordResult("C:/Users/zhou/Desktop/haha/");
+        
     }
 }

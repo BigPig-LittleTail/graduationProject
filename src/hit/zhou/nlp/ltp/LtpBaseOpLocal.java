@@ -7,6 +7,7 @@ import java.util.List;
 public class LtpBaseOpLocal{
     //分句
     private SplitSentence baseSplitSentenceImp;
+    private boolean isCreateSegmentor;
     // 分词
     private Segmentor baseSegmentorImp;
     // 词性标注
@@ -23,20 +24,41 @@ public class LtpBaseOpLocal{
         this.modelPath = modelPath;
         baseSplitSentenceImp = new SplitSentence();
         baseSegmentorImp = new Segmentor();
+        isCreateSegmentor = false;
+
+
         basePostaggerImp = new Postagger();
         baseNerImp = new NER();
         baseParserImp = new Parser();
     }
 
     public void splitSentence(String pager,List<String> stringList){
+
         baseSplitSentenceImp.splitSentence(pager,stringList);
     }
 
     public int segmentor(String sentence, List<String> words){
-        baseSegmentorImp.create(modelPath + "cws.model");
+        if(!isCreateSegmentor){
+            synchronized (this){
+                if(!isCreateSegmentor){
+                    baseSegmentorImp.create(modelPath + "cws.model");
+                    isCreateSegmentor = true;
+                }
+            }
+        }
         baseSegmentorImp.segment(sentence,words);
-        baseSegmentorImp.release();
         return words.size();
+    }
+
+    public void releaseSegmentor(){
+        if(isCreateSegmentor){
+            synchronized (this){
+                if(isCreateSegmentor){
+                    baseSegmentorImp.release();
+                    isCreateSegmentor = false;
+                }
+            }
+        }
     }
 
     public int postagger(List<String> words,List<String> posttag){

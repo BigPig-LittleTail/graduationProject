@@ -3,23 +3,28 @@ package hit.zhou.nlp.text;
 import hit.zhou.hepler.FileUtil;
 import hit.zhou.nlp.ltp.LtpBaseOpLocal;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.*;
 
 public class TFIDF {
     private Dir dir;
     private HashSet<String> stopWordSet;
     private boolean isStopWord;
-    public TFIDF(Dir dir,LtpBaseOpLocal ltpBaseOpLocal) {
+    private static ExecutorService pool = Executors.newFixedThreadPool(4);
+
+    private static final String MAP_2_RATE_FILE_NAME = "map2rate.txt";
+    private static final String KEY_WORD_FILE_NAME = "key_word.txt";
+
+    public TFIDF(Dir dir) {
         this.dir = dir;
         this.isStopWord = false;
-        init(ltpBaseOpLocal);
     }
 
-    public TFIDF(Dir dir,LtpBaseOpLocal ltpBaseOpLocal,String stopWordPath){
+    public TFIDF(Dir dir,String stopWordPath){
         this.dir = dir;
         try {
-
             String fileString = FileUtil.readString(stopWordPath);
             String[] stopWords = fileString.split("\r\n");
             this.stopWordSet = new HashSet<>();
@@ -33,89 +38,99 @@ public class TFIDF {
         }catch (IOException e){
             e.printStackTrace();
         }
-        init(ltpBaseOpLocal);
     }
 
-    private void init(LtpBaseOpLocal ltpBaseOpLocal){
+    public Map<String,Map<String,Float>> getAllFileMap2Rate(LtpBaseOpLocal ltpBaseOpLocal,String readPath,String savePath)
+            throws InterruptedException,IOException,ExecutionException {
         List<MyFile> myFiles = dir.getFileList();
-        for(MyFile myFile:myFiles) {
-            try {
-                String string = FileUtil.readString(myFile.getPath());
-                setMap2Rate(string,ltpBaseOpLocal,myFile);
-            }
-            catch (IOException e){
-                e.printStackTrace();
+        Map<String, Map<String, Float>> allMaps = new ConcurrentHashMap<>();
+        File dirFile = new File(savePath);
+        if(!dirFile.exists()){
+            dirFile.mkdirs();
+        }
+        List<Future> futures = new ArrayList<>();
+        for (MyFile myFile : myFiles) {
+            String filePath = readPath + myFile.getFileName() + "/" + MAP_2_RATE_FILE_NAME;
+            File file = new File(filePath);
+            if (!file.exists()) {
+                String fileSavePath = savePath + myFile.getFileName() + "/";
+                Map2RateRunnable r = new Map2RateRunnable(
+                        allMaps, myFile, ltpBaseOpLocal, isStopWord, stopWordSet,
+                        fileSavePath, MAP_2_RATE_FILE_NAME);
+                futures.add(pool.submit(r));
+            } else {
+                Map<String, Float> fileMap = getStringFloatMap(filePath);
+                allMaps.put(myFile.getFileName(),fileMap);
             }
         }
+        for(Future f:futures){
+            f.get();
+        }
+        pool.shutdown();
+        ltpBaseOpLocal.releaseSegmentor();
+        return allMaps;
     }
 
-    private void setMap2Rate(String fileString, LtpBaseOpLocal ltpBaseOpLocal, MyFile myFile){
-        List<String> stringList = new ArrayList<>();
-        ltpBaseOpLocal.splitSentence(fileString,stringList);
-        Map<String,Integer> word2Count = new HashMap<>();
-        Map<String,Float> word2Rate = new HashMap<>();
-        List<String> words = new ArrayList<>();
-        int totalWordNum = 0;
-        for(String s:stringList) {
-            if (s.equals("")) {
-                continue;
-            }
-            ltpBaseOpLocal.segmentor(s, words);
-            for (String word : words) {
-                if(isStopWord && stopWordSet.contains(word)) {
-                    continue;
-                }
-                totalWordNum++;
-                if (word2Count.containsKey(word)) {
-                    int count = word2Count.get(word);
-                    word2Count.put(word, ++count);
-                } else {
-                    word2Count.put(word, 1);
-                }
-            }
+    private Map<String, Float> getStringFloatMap(String filePath) throws IOException {
+        Map<String,Float> fileMap = new HashMap<>();
+        String mapString = FileUtil.readString(filePath);
+        String[] mapStringArray = mapString.split("\r\n");
+        for(String string : mapStringArray){
+            String[] mapEntry = string.split("\t");
+            fileMap.put(mapEntry[0],Float.valueOf(mapEntry[1]));
         }
-        for(Map.Entry<String,Integer> entry:word2Count.entrySet()){
-            String word = entry.getKey();
-            int count = entry.getValue();
-            float rate = (float) count/totalWordNum;
-            word2Rate.put(word,rate);
-        }
-//        System.out.println(word2Rate);
-        myFile.setWord2Rate(word2Rate);
+        return fileMap;
     }
 
 
-    public boolean setAllKeyWordListToAllFile(int keyWordListSize){
+    public boolean getAllFileKeyWordList(int keyWordListSize,Map<String,Map<String,Float>> allFileWord2Rate,String readDirPath,String saveDirPath)
+    throws IOException {
         List<MyFile> list = dir.getFileList();
         if(list.size() == 0)
             return false;
+        File dirPath = new File(saveDirPath);
+        if(!dirPath.exists()){
+            dirPath.mkdirs();
+        }
         boolean result = true;
         for(MyFile myFile:list){
-            if(!setKeyWordListToMyFile(keyWordListSize,myFile.getFileName()))
+            String fileReadPath = readDirPath + myFile.getFileName() + "/" + KEY_WORD_FILE_NAME;
+            String fileSavePath = saveDirPath + myFile.getFileName() + "/";
+            if(!getFilefKeyWordList(keyWordListSize,myFile.getFileName(),allFileWord2Rate,fileReadPath,fileSavePath))
                 result = false;
         }
         return result;
     }
 
 
-    public boolean setKeyWordListToMyFile(String fileName){
-        return setKeyWordListToMyFile(Integer.MAX_VALUE,fileName);
-    }
-
-
-    public boolean setKeyWordListToMyFile(int keyWordListSize,String fileName){
+    public boolean getFilefKeyWordList(int keyWordListSize,String fileName,Map<String,Map<String,Float>> allFileWord2Rate,String readPath,String savePath)
+    throws IOException{
+        File keyWordFile = new File(readPath);
+        if(keyWordFile.exists() && keyWordFile.isFile()){
+            List<WordCount<Float>> realKeyWordList = new ArrayList<>();
+            String keyWordListString = FileUtil.readString(readPath);
+            String[] keyWordListStringArray = keyWordListString.split("\r\n");
+            for(String string : keyWordListStringArray){
+                String[] wordCountString = string.split("\t");
+                WordCount<Float> wordCount = new WordCount<>(wordCountString[0],Float.valueOf(wordCountString[1]));
+                realKeyWordList.add(wordCount);
+            }
+            MyFile myFile = dir.getFileByName(fileName);
+            myFile.setKeyWord(realKeyWordList);
+            return true;
+        }
         int filesNum = dir.getFileCount();
         List<MyFile> myFiles = dir.getFileList();
-        if(dir.isFileExist(fileName)){
+        if(allFileWord2Rate.containsKey(fileName)){
             MyFile myFile = dir.getFileByName(fileName);
-            Map<String,Float> myFileWord2Rate = myFile.getWord2Rate();
+            Map<String,Float> myFileWord2Rate = allFileWord2Rate.get(fileName);
             List<WordCount<Float>> keyWordList = new ArrayList<>();
             for(Map.Entry<String,Float> entry:myFileWord2Rate.entrySet()){
                 String word = entry.getKey();
                 float tf = entry.getValue();
                 int existInOtherFileNum = 0;
                 for(MyFile listItemFile:myFiles){
-                    Map<String,Float> listItemFileWord2Rate = listItemFile.getWord2Rate();
+                    Map<String,Float> listItemFileWord2Rate = allFileWord2Rate.get(listItemFile.getFileName());
                     if(listItemFileWord2Rate.containsKey(word)){
                         existInOtherFileNum++;
                     }
@@ -137,11 +152,19 @@ public class TFIDF {
             keyWordList.sort(comparator);
             int keyWordRealSize = keyWordListSize > keyWordList.size() ? keyWordList.size() : keyWordListSize;
             List<WordCount<Float>> realKeyWordList = new ArrayList<>(keyWordList.subList(0,keyWordRealSize));
-            System.out.println(realKeyWordList);
             myFile.setKeyWord(realKeyWordList);
+            saveKeyWordFile(savePath,realKeyWordList);
             return true;
         }
         return false;
+    }
+
+    private void saveKeyWordFile(String dirPath,List<WordCount<Float>> keyWord){
+        String writeString = "";
+        for(WordCount<Float> word2KeyWordRate:keyWord){
+            writeString = writeString + word2KeyWordRate.getWord() + "\t" + word2KeyWordRate.getcountOrRate() + "\r\n";
+        }
+        FileUtil.save(dirPath,KEY_WORD_FILE_NAME,writeString.getBytes(),false);
     }
 
 }

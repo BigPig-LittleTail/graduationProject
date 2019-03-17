@@ -7,11 +7,8 @@ import java.util.List;
 public class Dir {
     private String dirPath;
     private List<MyFile> fileList;
-
     private static final String DIR_ERROR = "Your path is not exist";
     private static final String FILES_NULL = "Files are null";
-
-    private static final String KEY_WORD_FILE_NAME = "key_word.txt";
 
     public Dir(String dirPath){
         File file = new File(dirPath);
@@ -61,34 +58,6 @@ public class Dir {
                 return myFile;
         }
         return null;
-    }
-
-    public void saveDirFileKeyWordResultToFile(String fileWantToSaveName,String saveToDirPath){
-        if(isFileExist(fileWantToSaveName)){
-            MyFile myFile = getFileByName(fileWantToSaveName);
-            checkAndMakeDir(saveToDirPath);
-            String fileRealResultPath = buildFileSaveDirPath(saveToDirPath,myFile.getFileName());
-            myFile.saveKeyWordResultToFile(fileRealResultPath,KEY_WORD_FILE_NAME);
-        }
-    }
-
-    public void saveDirAllFileKeyWordResult(String saveToDirPath){
-        for(MyFile myFile:fileList){
-            checkAndMakeDir(saveToDirPath);
-            String fileRealResultPath = buildFileSaveDirPath(saveToDirPath,myFile.getFileName());
-            myFile.saveKeyWordResultToFile(fileRealResultPath,KEY_WORD_FILE_NAME);
-        }
-    }
-
-    private void checkAndMakeDir(String saveToDirPath) {
-        File filedir = new File(saveToDirPath);
-        if (!filedir.exists()) {
-            filedir.mkdirs();
-        }
-    }
-
-    private String buildFileSaveDirPath(String topDirPath,String fileName){
-        return topDirPath + fileName + "/";
     }
 
 }
