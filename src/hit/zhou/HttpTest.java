@@ -1,9 +1,9 @@
 package hit.zhou;
 
 import edu.hit.ir.ltp4j.Pair;
-import hit.zhou.hepler.FileUtil;
-import hit.zhou.hepler.OkHttpUtil;
-import hit.zhou.nlp.ltp.LtpBaseOpNet;
+import hit.zhou.common.tools.FileUtil;
+import hit.zhou.common.tools.OkHttpUtil;
+import hit.zhou.ltp.LtpBaseOpNet;
 import okhttp3.OkHttpClient;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package hit.zhou.nlp.text;
+package hit.zhou.common.bean;
 
 import java.util.List;
 
@@ -29,5 +29,11 @@ public class MyFile {
         return dirPath + fileName;
     }
 
+    public List<WordCount<Float>> getKeyWord() {
+        return keyWord;
+    }
 
+    public int getKeyWordListSize(){
+        return keyWord.size();
+    }
 }

@@ -1,7 +1,8 @@
-package hit.zhou.nlp.text;
+package hit.zhou.keyword;
 
-import hit.zhou.hepler.FileUtil;
-import hit.zhou.nlp.ltp.LtpBaseOpLocal;
+import hit.zhou.common.bean.MyFile;
+import hit.zhou.common.tools.FileUtil;
+import hit.zhou.ltp.LtpBaseOpLocal;
 
 import java.io.IOException;
 import java.util.*;

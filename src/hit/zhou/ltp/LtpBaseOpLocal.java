@@ -1,4 +1,4 @@
-package hit.zhou.nlp.ltp;
+package hit.zhou.ltp;
 
 import edu.hit.ir.ltp4j.*;
 
@@ -33,7 +33,6 @@ public class LtpBaseOpLocal{
     }
 
     public void splitSentence(String pager,List<String> stringList){
-
         baseSplitSentenceImp.splitSentence(pager,stringList);
     }
 

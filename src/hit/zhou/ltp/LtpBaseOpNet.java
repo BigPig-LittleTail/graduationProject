@@ -1,9 +1,9 @@
-package hit.zhou.nlp.ltp;
+package hit.zhou.ltp;
 
 import com.alibaba.fastjson.JSONObject;
 import edu.hit.ir.ltp4j.Pair;
-import hit.zhou.hepler.JsonUtil;
-import hit.zhou.hepler.OkHttpUtil;
+import hit.zhou.common.tools.JsonUtil;
+import hit.zhou.common.tools.OkHttpUtil;
 import okhttp3.Headers;
 import okhttp3.Response;
 import org.apache.commons.codec.binary.Base64;

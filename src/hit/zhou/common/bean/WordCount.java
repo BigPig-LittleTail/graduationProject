@@ -1,4 +1,4 @@
-package hit.zhou.nlp.text;
+package hit.zhou.common.bean;
 
 public class WordCount<T> {
     private String word;

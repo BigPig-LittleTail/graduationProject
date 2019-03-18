@@ -1,7 +1,10 @@
-package hit.zhou.nlp.text;
+package hit.zhou.keyword;
 
-import hit.zhou.hepler.FileUtil;
-import hit.zhou.nlp.ltp.LtpBaseOpLocal;
+import hit.zhou.common.bean.Dir;
+import hit.zhou.common.bean.MyFile;
+import hit.zhou.common.bean.WordCount;
+import hit.zhou.common.tools.FileUtil;
+import hit.zhou.ltp.LtpBaseOpLocal;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +43,7 @@ public class TFIDF {
         }
     }
 
-    public Map<String,Map<String,Float>> getAllFileMap2Rate(LtpBaseOpLocal ltpBaseOpLocal,String readPath,String savePath)
+    public Map<String,Map<String,Float>> buildAllFileMap2Rate(LtpBaseOpLocal ltpBaseOpLocal,String readPath,String savePath)
             throws InterruptedException,IOException,ExecutionException {
         List<MyFile> myFiles = dir.getFileList();
         Map<String, Map<String, Float>> allMaps = new ConcurrentHashMap<>();
@@ -59,7 +62,7 @@ public class TFIDF {
                         fileSavePath, MAP_2_RATE_FILE_NAME);
                 futures.add(pool.submit(r));
             } else {
-                Map<String, Float> fileMap = getStringFloatMap(filePath);
+                Map<String, Float> fileMap = getStringFloatMapFromFile(filePath);
                 allMaps.put(myFile.getFileName(),fileMap);
             }
         }
@@ -71,7 +74,7 @@ public class TFIDF {
         return allMaps;
     }
 
-    private Map<String, Float> getStringFloatMap(String filePath) throws IOException {
+    private Map<String, Float> getStringFloatMapFromFile(String filePath) throws IOException {
         Map<String,Float> fileMap = new HashMap<>();
         String mapString = FileUtil.readString(filePath);
         String[] mapStringArray = mapString.split("\r\n");

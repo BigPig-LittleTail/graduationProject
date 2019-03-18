@@ -1,4 +1,4 @@
-package hit.zhou.nlp.text;
+package hit.zhou.common.bean;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -2,6 +2,7 @@ package hit.zhou.spyder;
 
 import us.codecraft.webmagic.Spider;
 
+@Deprecated
 public class SpyderTest {
 
     public static void main(String[] args) {
