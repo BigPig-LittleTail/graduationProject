@@ -1,4 +1,4 @@
-package hit.zhou.kmeans;
+package hit.zhou.kmeans.cluster;
 
 public class KeyWordVector {
     private String keyWord;
@@ -24,4 +24,6 @@ public class KeyWordVector {
     public String getKeyWord() {
         return keyWord;
     }
+
+
 }

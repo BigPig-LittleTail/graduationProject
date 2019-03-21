@@ -6,22 +6,51 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class Dir {
+public class DirTest{
     private String dirPath;
-    private List<MyFile> fileList;
-    private Dir parent;
-    private List<Dir> dirCihldList;
+    private List<MyFileTest> fileList;
+    private DirTest parent;
+    private List<DirTest> dirCihldList;
+    private List<WordCount<Float>> keyWordList;
     private String dirName;
     private String fileType;
 
-    private static final String TYPE_FILE_NAME = "type_file.txt";
+    private int totalNum;
+    private Map<String,Integer> word2Count;
 
+
+    public List<WordCount<Float>> getKeyWordList() {
+        return keyWordList;
+    }
+
+    public void setKeyWordList(List<WordCount<Float>> keyWordList) {
+        this.keyWordList = keyWordList;
+    }
+
+    public Map<String, Integer> getWord2Count() {
+        return word2Count;
+    }
+
+    public void setWord2Count(Map<String, Integer> word2Count) {
+        this.word2Count = word2Count;
+    }
+
+    public int getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(int totalNum) {
+        this.totalNum = totalNum;
+    }
+
+    private static final String TYPE_FILE_NAME = "type_file.txt";
     private static final String TYPE_FILE_NOT_EXIST = "type file is not exist";
     private static final String DIR_ERROR = "Your path is not exist";
     private static final String FILES_NULL = "Files are null";
 
-    public Dir(Dir parent,String dirPath) throws IOException {
+    public DirTest(DirTest parent, String dirPath) throws IOException {
         File dirFile = new File(dirPath);
         if(!dirFile.exists()){
             throw new IllegalArgumentException(DIR_ERROR);
@@ -47,21 +76,20 @@ public class Dir {
         }
         for(File fileInDir:files){
             if(fileInDir.isFile() && !fileInDir.getName().equals(TYPE_FILE_NAME)){
-                fileList.add(new MyFile(this,dirPath,fileInDir.getName()));
+                fileList.add(new MyFileTest(this,dirPath,fileInDir.getName()));
             }
             else if(fileInDir.isDirectory()){
-                System.out.println(fileInDir.getPath());
-                System.out.println(fileInDir.getName());
-                dirCihldList.add(new Dir(this,fileInDir.getPath() + "/"));
+                dirCihldList.add(new DirTest(this,fileInDir.getPath() + "/"));
             }
         }
+
     }
 
     public int getFileCount() {
         return fileList.size();
     }
 
-    public List<MyFile> getFileList() {
+    public List<MyFileTest> getFileList() {
         return fileList;
     }
 
@@ -70,7 +98,7 @@ public class Dir {
     }
 
     public boolean isFileExist(String fileName){
-        for (MyFile myFile : fileList){
+        for (MyFileTest myFile : fileList){
             if(myFile.getFileName().equals(fileName)){
                 return true;
             }
@@ -78,15 +106,15 @@ public class Dir {
         return false;
     }
 
-    public MyFile getFileByName(String fileName){
-        for(MyFile myFile:fileList){
+    public MyFileTest getFileByName(String fileName){
+        for(MyFileTest myFile:fileList){
             if(myFile.getFileName().equals(fileName))
                 return myFile;
         }
         return null;
     }
 
-    public List<Dir> getDirCihldList() {
+    public List<DirTest> getDirCihldList() {
         return  dirCihldList;
     }
 
@@ -99,7 +127,9 @@ public class Dir {
     }
 
 
-    public Dir getParent() {
+    public DirTest getParent() {
         return parent;
     }
+
+
 }

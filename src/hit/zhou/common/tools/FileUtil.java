@@ -148,4 +148,17 @@ public class FileUtil {
 		}
 	}
 
+
+	public static void saveTest(String savePath,byte[] content,boolean isAppend){
+		try {
+			File file = new File(savePath);
+			OutputStream os = new FileOutputStream(file,isAppend);
+			os.write(content, 0, content.length);
+			os.flush();
+			os.close();
+		}  catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

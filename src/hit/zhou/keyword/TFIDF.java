@@ -110,14 +110,7 @@ public class TFIDF {
     throws IOException{
         File keyWordFile = new File(readPath);
         if(keyWordFile.exists() && keyWordFile.isFile()){
-            List<WordCount<Float>> realKeyWordList = new ArrayList<>();
-            String keyWordListString = FileUtil.readString(readPath);
-            String[] keyWordListStringArray = keyWordListString.split("\r\n");
-            for(String string : keyWordListStringArray){
-                String[] wordCountString = string.split("\t");
-                WordCount<Float> wordCount = new WordCount<>(wordCountString[0],Float.valueOf(wordCountString[1]));
-                realKeyWordList.add(wordCount);
-            }
+            List<WordCount<Float>> realKeyWordList = readKeyWordFromFile(readPath);
             MyFile myFile = dir.getFileByName(fileName);
             myFile.setKeyWord(realKeyWordList);
             return true;
@@ -160,6 +153,18 @@ public class TFIDF {
             return true;
         }
         return false;
+    }
+
+    private List<WordCount<Float>> readKeyWordFromFile(String readPath) throws IOException {
+        List<WordCount<Float>> realKeyWordList = new ArrayList<>();
+        String keyWordListString = FileUtil.readString(readPath);
+        String[] keyWordListStringArray = keyWordListString.split("\r\n");
+        for(String string : keyWordListStringArray){
+            String[] wordCountString = string.split("\t");
+            WordCount<Float> wordCount = new WordCount<>(wordCountString[0],Float.valueOf(wordCountString[1]));
+            realKeyWordList.add(wordCount);
+        }
+        return realKeyWordList;
     }
 
     private void saveKeyWordFile(String dirPath,List<WordCount<Float>> keyWord){

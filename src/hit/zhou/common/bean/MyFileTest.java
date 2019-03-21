@@ -1,21 +1,40 @@
 package hit.zhou.common.bean;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyFile {
+public class MyFileTest{
     private String dirPath;
     private String fileName;
-    private Map<String,Float> word2rate;
+    private DirTest parent;
+    private int totalCount;
+    private Map<String,Integer> word2Count;
     private List<WordCount<Float>> keyWord;
-    private Dir parent;
 
-    public MyFile(Dir parent,String dirPath,String fileName){
+
+    public int getTotalCount() {
+        return totalCount;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    public MyFileTest(DirTest parent, String dirPath, String fileName) {
         this.parent = parent;
         this.dirPath = dirPath;
         this.fileName = fileName;
+        this.word2Count = new HashMap<>();
     }
 
+    public Map<String, Integer> getWord2Count() {
+        return word2Count;
+    }
+
+    public void setWord2Count(Map<String, Integer> word2Count) {
+        this.word2Count = word2Count;
+    }
 
     public void setKeyWord(List<WordCount<Float>> keyWord) {
         this.keyWord = keyWord;
@@ -41,15 +60,9 @@ public class MyFile {
         return keyWord.size();
     }
 
-    public void setWord2rate(Map<String, Float> word2rate) {
-        this.word2rate = word2rate;
-    }
-
-    public Map<String, Float> getWord2rate() {
-        return word2rate;
-    }
-
-    public Dir getParent() {
+    public DirTest getParent() {
         return parent;
     }
+
+
 }
