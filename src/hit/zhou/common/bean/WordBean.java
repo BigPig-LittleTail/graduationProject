@@ -3,11 +3,19 @@ package hit.zhou.common.bean;
 public class WordBean {
     private String word;
     private String pos;
+    private int parent;
     private String dp;
-    private String ner;
 
-    public WordBean(String word){
+    public WordBean(String word,String pos,int parent,String dp){
         this.word = word;
+        this.pos = pos;
+        this.parent = parent;
+        this.dp = dp;
+
+    }
+
+    public int getParent() {
+        return parent;
     }
 
     public String getWord() {
@@ -22,10 +30,6 @@ public class WordBean {
         return dp;
     }
 
-    public String getNer() {
-        return ner;
-    }
-
     public void setWord(String word) {
         this.word = word;
     }
@@ -38,7 +42,8 @@ public class WordBean {
         this.dp = dp;
     }
 
-    public void setNer(String ner) {
-        this.ner = ner;
+
+    public void setParent(int parent) {
+        this.parent = parent;
     }
 }

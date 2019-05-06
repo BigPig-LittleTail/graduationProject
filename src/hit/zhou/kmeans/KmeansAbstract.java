@@ -1,7 +1,7 @@
 package hit.zhou.kmeans;
 
-import hit.zhou.common.bean.DirTest;
-import hit.zhou.common.bean.MyFileTest;
+import hit.zhou.common.bean.Dir;
+import hit.zhou.common.bean.PageForKeyWord;
 import hit.zhou.common.bean.WordCount;
 import hit.zhou.kmeans.cluster.Creater;
 import hit.zhou.kmeans.cluster.KeyWordVector;
@@ -25,7 +25,7 @@ public  abstract class KmeansAbstract<T extends KmeansClusterAbstract> {
         this.builder = builder;
     }
 
-    public abstract void normalization(List<DirTest> allTypeList,Map<String, KeyWordVector> word2VectorMap,int dimension);
+    public abstract void normalization(List<Dir> allTypeList, Map<String, KeyWordVector> word2VectorMap, int dimension);
     public abstract int enSureWhichClusterSet(KeyWordVector keyWordVector,List<T> clusters);
     public abstract KeyWordVector getNotSimilarKeyWordVector(T kCluster, Map<String, KeyWordVector> word2VectorMap);
     public abstract boolean isCanStop(List<T> clusters);
@@ -128,32 +128,32 @@ public  abstract class KmeansAbstract<T extends KmeansClusterAbstract> {
     }
 
 
-    public void buildVectors(DirTest dirNode, int targetLevel){
+    public void buildVectors(Dir dirNode, int targetLevel){
         realBuildVectors(dirNode,targetLevel);
     }
 
-    private void realBuildVectors(DirTest dirNode,int targetLevel){
+    private void realBuildVectors(Dir dirNode, int targetLevel){
         // targetLevel是聚类完成后类的层
-        // 获得targetLevel的子List<DirTest>的队列，队列里的每一个List都是一维
-        Deque<List<DirTest>> queue = getTargetLevelLists(dirNode, targetLevel);
-        List<DirTest> allDirParentList = new ArrayList<>();
+        // 获得targetLevel的子List<Dir>的队列，队列里的每一个List都是一维
+        Deque<List<Dir>> queue = getTargetLevelLists(dirNode, targetLevel);
+        List<Dir> allDirParentList = new ArrayList<>();
         while(!queue.isEmpty()){
-            List<DirTest> dirParentList  = queue.poll();
+            List<Dir> dirParentList  = queue.poll();
             allDirParentList.addAll(dirParentList);
         }
         int dimension = allDirParentList.size();
         // 将KeyWord转化成多维向量KeyWordVector
         for(int i = 0;i < dimension;i++){
-            DirTest dirChild = allDirParentList.get(i);
+            Dir dirChild = allDirParentList.get(i);
 
-            List<MyFileTest> thisLevelFileList = dirChild.getFileList();
-            for(MyFileTest thisLevelFile:thisLevelFileList){
+            List<PageForKeyWord> thisLevelFileList = dirChild.getFileList();
+            for(PageForKeyWord thisLevelFile:thisLevelFileList){
                 List<WordCount<Float>> keyWordList = thisLevelFile.getKeyWord();
                 transKeyWordToKeyWordVector(dimension,i,keyWordList);
             }
 
-            List<DirTest> thisLevelDirList = dirChild.getDirCihldList();
-            for(DirTest thisLevelDir:thisLevelDirList){
+            List<Dir> thisLevelDirList = dirChild.getDirCihldList();
+            for(Dir thisLevelDir:thisLevelDirList){
                 List<WordCount<Float>> keyWordList = thisLevelDir.getKeyWordList();
                 transKeyWordToKeyWordVector(dimension, i, keyWordList);
             }
@@ -161,21 +161,21 @@ public  abstract class KmeansAbstract<T extends KmeansClusterAbstract> {
         normalization(allDirParentList, dimension);
     }
 
-    private void normalization(List<DirTest> allTypeList, int dimension) {
+    private void normalization(List<Dir> allTypeList, int dimension) {
         normalization(allTypeList,word2VectorMap,dimension);
     }
 
-    private Deque<List<DirTest>> getTargetLevelLists(DirTest dirNode, int targetLevel) {
+    private Deque<List<Dir>> getTargetLevelLists(Dir dirNode, int targetLevel) {
         int currentLevel = 1;
-        Deque<List<DirTest>> queue = new LinkedList<>();
-        List<DirTest> node = dirNode.getDirCihldList();
+        Deque<List<Dir>> queue = new LinkedList<>();
+        List<Dir> node = dirNode.getDirCihldList();
         queue.offer(node);
-        List<DirTest> lastNode = node;
+        List<Dir> lastNode = node;
         currentLevel++;
         while(!queue.isEmpty() && currentLevel < targetLevel){
             do{
                 node = queue.peek();
-                for (DirTest dirChild:node){
+                for (Dir dirChild:node){
                     queue.offer(dirChild.getDirCihldList());
                 }
             }while(queue.poll() != lastNode);

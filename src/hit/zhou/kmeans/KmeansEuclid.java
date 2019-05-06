@@ -1,6 +1,6 @@
 package hit.zhou.kmeans;
 
-import hit.zhou.common.bean.DirTest;
+import hit.zhou.common.bean.Dir;
 import hit.zhou.kmeans.cluster.Creater;
 import hit.zhou.kmeans.cluster.KeyWordVector;
 import hit.zhou.kmeans.cluster.KmeansClusterEuclid;
@@ -15,9 +15,9 @@ public class KmeansEuclid extends KmeansAbstract<KmeansClusterEuclid> {
     }
 
     @Override
-    public void normalization(List<DirTest> allTypeList, Map<String, KeyWordVector> word2VectorMap, int dimension) {
+    public void normalization(List<Dir> allTypeList, Map<String, KeyWordVector> word2VectorMap, int dimension) {
         for(int i = 0;i < dimension;i++){
-            DirTest dirChild = allTypeList.get(i);
+            Dir dirChild = allTypeList.get(i);
             int count = dirChild.getFileCount();
             for(Map.Entry<String, KeyWordVector> keyWordVectorEntry:word2VectorMap.entrySet()){
                 KeyWordVector keyWordVector = keyWordVectorEntry.getValue();

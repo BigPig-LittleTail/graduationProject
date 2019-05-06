@@ -4,14 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyFileTest{
-    private String dirPath;
-    private String fileName;
-    private DirTest parent;
+public class PageForKeyWord extends Page {
     private int totalCount;
     private Map<String,Integer> word2Count;
     private List<WordCount<Float>> keyWord;
-
 
     public int getTotalCount() {
         return totalCount;
@@ -21,10 +17,8 @@ public class MyFileTest{
         this.totalCount = totalCount;
     }
 
-    public MyFileTest(DirTest parent, String dirPath, String fileName) {
-        this.parent = parent;
-        this.dirPath = dirPath;
-        this.fileName = fileName;
+    public PageForKeyWord(Dir parent, String dirPath, String fileName) {
+        super(parent,dirPath,fileName);
         this.word2Count = new HashMap<>();
     }
 
@@ -40,28 +34,12 @@ public class MyFileTest{
         this.keyWord = keyWord;
     }
 
-    public String getDirPath() {
-        return dirPath;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public String getPath(){
-        return dirPath + fileName;
-    }
-
     public List<WordCount<Float>> getKeyWord() {
         return keyWord;
     }
 
     public int getKeyWordListSize(){
         return keyWord.size();
-    }
-
-    public DirTest getParent() {
-        return parent;
     }
 
 

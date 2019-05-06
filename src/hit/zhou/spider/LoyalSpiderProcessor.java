@@ -1,11 +1,11 @@
-package hit.zhou.spyder;
+package hit.zhou.spider;
 
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
 
 @Deprecated
-public class LoyalSpyderProcessor implements PageProcessor {
+public class LoyalSpiderProcessor implements PageProcessor {
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setTimeOut(10000);
 //            .addHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
 //            .addHeader("Accept-Encoding","gzip, deflate")
