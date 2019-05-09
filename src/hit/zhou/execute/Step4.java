@@ -119,8 +119,8 @@ public class Step4 {
         relationStr.append("\t");
         StringBuilder sentenceBuilder = new StringBuilder();
         for(Sentence sentence:relation.getSentenceList()){
-            for(WordBean wordBean : sentence.getWordsList()){
-                sentenceBuilder.append(wordBean.getWord());
+            for(Word word : sentence.getWordsList()){
+                sentenceBuilder.append(word.getWordString());
             }
             sentenceBuilder.append("\t");
         }

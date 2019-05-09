@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import hit.zhou.common.bean.PageForNlp;
 import hit.zhou.common.bean.Relation;
 import hit.zhou.common.bean.Sentence;
-import hit.zhou.common.bean.WordBean;
+import hit.zhou.common.bean.Word;
 import hit.zhou.common.tools.FileUtil;
 
 import java.io.IOException;
@@ -30,12 +30,12 @@ public class RelationShipGet {
     }
 
     private void printSentence(Sentence sentence){
-        List<WordBean> list = sentence.getWordsList();
+        List<Word> list = sentence.getWordsList();
         StringBuilder outt = new StringBuilder();
         for(int i = 0;i < list.size();i++){
-            WordBean wordBean = list.get(i);
-            String wordTemp = "(" + wordBean.getWord() + "," + (i+1) +")"+wordBean.getPos() + ",(" + wordBean.getDp() +"," +
-                    wordBean.getParent() + ")|";
+            Word word = list.get(i);
+            String wordTemp = "(" + word.getWordString() + "," + (i+1) +")"+ word.getPos() + ",(" + word.getDp() +"," +
+                    word.getParent() + ")|";
             outt.append(wordTemp);
         }
         System.out.println(outt.toString());
@@ -43,17 +43,17 @@ public class RelationShipGet {
 
 
     private void relationshipGet(String head,String tail,Sentence sentence){
-        List<WordBean> wordsList = sentence.getWordsList();
+        List<Word> wordsList = sentence.getWordsList();
         for(int i = 0;i < wordsList.size();i++){
-            if(head.equals(wordsList.get(i).getWord()) && wordsList.get(i).getPos().matches("n.*")){
+            if(head.equals(wordsList.get(i).getWordString()) && wordsList.get(i).getPos().matches("n.*")){
                 for(int j = wordsList.size() - 1;j > i;j--) {
-                    if(tail.equals(wordsList.get(j).getWord()) && wordsList.get(j).getPos().matches("n.*")){
+                    if(tail.equals(wordsList.get(j).getWordString()) && wordsList.get(j).getPos().matches("n.*")){
                         printSentence(sentence);
                         int[] result = new int[2];
                         if(getRelationIndexAndDistacne(wordsList,i,j,result)){
                             int relatioinIndex = result[0];
                             int distacne = result[1];
-                            Relation relation = new Relation(head,tail,wordsList.get(relatioinIndex).getWord(),sentence,distacne);
+                            Relation relation = new Relation(head,tail,wordsList.get(relatioinIndex).getWordString(),sentence,distacne);
                             if(relationAll.containsKey(relation)){
                                 relationAll.get(relation).addSameNameRelation(relation);
                             }
@@ -67,7 +67,7 @@ public class RelationShipGet {
         }
     }
 
-    private boolean getRelationIndexAndDistacne(List<WordBean> wordsList, int i, int j,int[] result) {
+    private boolean getRelationIndexAndDistacne(List<Word> wordsList, int i, int j, int[] result) {
         int countI = countLinkLength(wordsList, i);
         int countJ = countLinkLength(wordsList, j);
         int indexFirst;
@@ -131,7 +131,7 @@ public class RelationShipGet {
         return false;
     }
 
-    private int countLinkLength(List<WordBean> wordsLink, int index) {
+    private int countLinkLength(List<Word> wordsLink, int index) {
         int count = 1;
         int nowIndex = index;
         int parentIndex =  wordsLink.get(nowIndex).getParent();

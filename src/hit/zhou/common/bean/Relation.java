@@ -3,6 +3,7 @@ package hit.zhou.common.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+//:todo Relation的结构更改
 public class Relation {
     private int relationCount;
     private int totalDistance;

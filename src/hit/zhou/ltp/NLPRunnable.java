@@ -60,7 +60,7 @@ public class NLPRunnable implements Runnable {
             ltpBaseOpLocal.postagger(wordList,posList);
             ltpBaseOpLocal.parser(wordList,posList,headList,dpList);
             Sentence sentence = new Sentence();
-            sentence.buildWordBean(wordList,posList,headList,dpList);
+            sentence.buildWordList(wordList,posList,headList,dpList);
 
             sentenceList.add(sentence);
 //            pageForNlp.addSentence(sentence);
