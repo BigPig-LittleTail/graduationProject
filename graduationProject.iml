@@ -16,5 +16,6 @@
     <orderEntry type="library" name="org.apache.poi:poi-scratchpad:4.0.1" level="project" />
     <orderEntry type="library" name="org.apache.poi:poi-ooxml:4.0.1" level="project" />
     <orderEntry type="library" name="us.codecraft:webmagic-core:0.7.3" level="project" />
+    <orderEntry type="library" name="neo4j" level="project" />
   </component>
 </module>
