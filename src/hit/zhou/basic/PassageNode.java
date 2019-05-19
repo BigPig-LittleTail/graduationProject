@@ -25,8 +25,9 @@ public class PassageNode extends File {
     private EntryType type;
     private List<PassageNode> children;
 
-    // 用来正则匹配句子开始的诸如"第二条"，以便提升NLP预处理的效果。
-    private static final String RE_PATTERN = "^\\u7b2c([\\u4e00|\\u4e8c|\\u4e09|\\u56db|\\u4e94|\\u516d|\\u4e03|\\u516b|\\u4e5d|\\u96f6|\\u5341|\\u767e]{1,5})\\u6761";
+    // 用来正则匹配句子开始的诸如"第二条"、"（一）"以便提升NLP预处理的效果。
+    private static final String RE_PATTERN = "^\\uff08([\\u4e00|\\u4e8c|\\u4e09|\\u56db|\\u4e94|\\u516d|\\u4e03|\\u516b|\\u4e5d|\\u96f6|\\u5341|\\u767e]{1,5})\\uff09|^\\u7b2c([\\u4e00|\\u4e8c|\\u4e09|\\u56db|\\u4e94|\\u516d|\\u4e03|\\u516b|\\u4e5d|\\u96f6|\\u5341|\\u767e]{1,5})\\u6761";
+
 
     public static final String HEAD_STRING = "head_map";
     public static final String TAIL_STRING = "tail_map";
@@ -186,6 +187,7 @@ public class PassageNode extends File {
         for(MyRDF rdf:rdfList){
             MyEntry head = rdf.getHead();
             MyEntry tail = rdf.getTail();
+
 
             if(head2Count.containsKey(head.getWordString())){
                 float count = head2Count.get(head.getWordString());

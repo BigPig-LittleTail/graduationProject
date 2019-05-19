@@ -5,16 +5,16 @@ import com.alibaba.fastjson.TypeReference;
 import hit.zhou.EntryType;
 import hit.zhou.basic.PassageNode;
 import hit.zhou.tools.FileUtil;
-import hit.zhou.tools.kmeans.VectorTest;
+import hit.zhou.tools.kmeans.Vector;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class KmeansParamBuildTest {
-    public static void passageNodes2Vectors(List<PassageNode> passageNodes,final Map<EntryType,Integer> typeIndexMap,
-                                            Map<String,VectorTest<EntryType>> headVectors,Map<String,VectorTest<EntryType>> tailVectors) throws IOException {
+public class KmeansParamBuildHelper {
+    public static void passageNodes2Vectors(List<PassageNode> passageNodes, final Map<EntryType,Integer> typeIndexMap,
+                                            Map<String, Vector<EntryType>> headVectors, Map<String, Vector<EntryType>> tailVectors) throws IOException {
         Map<EntryType,Float> headTypeNumberMap = new HashMap<>();
         Map<EntryType,Float> tailTypeNumberMap = new HashMap<>();
 
@@ -39,8 +39,8 @@ public class KmeansParamBuildTest {
         }
     }
 
-    private static void normal(Map<String, VectorTest<EntryType>> vectors, Map<EntryType, Float> typeNumberMap, EntryType type) {
-        for(Map.Entry<String,VectorTest<EntryType>> entry: vectors.entrySet()){
+    private static void normal(Map<String, Vector<EntryType>> vectors, Map<EntryType, Float> typeNumberMap, EntryType type) {
+        for(Map.Entry<String, Vector<EntryType>> entry: vectors.entrySet()){
             float notNormal = entry.getValue().getDataByType(type);
             float totalNumber = typeNumberMap.get(type);
             entry.getValue().setDataByType(notNormal / totalNumber,type);
@@ -58,7 +58,7 @@ public class KmeansParamBuildTest {
         }
     }
 
-    private static void buildVectors(Map<EntryType,Integer> typeIntegerMap, Map<String, VectorTest<EntryType>> vectors, List<Map.Entry<String, Float>> keyWordList, EntryType type) {
+    private static void buildVectors(Map<EntryType,Integer> typeIntegerMap, Map<String, Vector<EntryType>> vectors, List<Map.Entry<String, Float>> keyWordList, EntryType type) {
         for(Map.Entry<String,Float> keyWord: keyWordList){
             if(vectors.containsKey(keyWord.getKey())){
                 float tempData = vectors.get(keyWord.getKey()).getDataByType(type);
@@ -68,7 +68,7 @@ public class KmeansParamBuildTest {
             }
             else{
                 float[] vectorData = new float[typeIntegerMap.size()];
-                VectorTest<EntryType> vector = new VectorTest<>(keyWord.getKey(),vectorData,typeIntegerMap);
+                Vector<EntryType> vector = new Vector<>(keyWord.getKey(),vectorData,typeIntegerMap);
                 Object o = keyWord.getValue();
                 float data = Float.parseFloat(o.toString());
                 vector.setDataByType(data,type);

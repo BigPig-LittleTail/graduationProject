@@ -94,10 +94,10 @@ public class DpTree {
             if(root.getWord().getPos().equals("v")){
                 List<DpNode> childrenNodes = root.getChildren();
                 for(DpNode childern:childrenNodes){
-                    if(childern.getWord().getPos().matches("n.*") && childern.getWord().getDp().equals("SBV")){
+                    if(childern.getWord().getPos().matches("n[s|h|i|l|z]*") && childern.getWord().getDp().equals("SBV")){
                         sbvNodes.add(childern);
                     }
-                    else if(childern.getWord().getPos().matches("n.*") && childern.getWord().getDp().equals("VOB")){
+                    else if(childern.getWord().getPos().matches("n[s|h|i|l|z]*") && childern.getWord().getDp().equals("VOB")){
                         vobNodes.add(childern);
                     }
                 }

@@ -2,12 +2,12 @@ package hit.zhou.tools.kmeans;
 
 import java.util.Map;
 
-public class VectorTest<T extends Enum> {
+public class Vector<T extends Enum> {
     private String wordString;
     private float[] vectorData;
     private Map<T,Integer> typeMapIndex;
 
-    public VectorTest(String wordString,float[] vectorData,Map<T,Integer> typeMapIndex){
+    public Vector(String wordString, float[] vectorData, Map<T,Integer> typeMapIndex){
         this.wordString = wordString;
         this.vectorData = vectorData;
         this.typeMapIndex = typeMapIndex;
