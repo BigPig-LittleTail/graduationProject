@@ -9,13 +9,11 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="ltp4j-0.1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="org.apache.directory.studio:org.apache.commons.codec:1.8" level="project" />
-    <orderEntry type="library" name="com.squareup.okio:benchmarks:1.17.3" level="project" />
-    <orderEntry type="library" name="okhttp-3.13.1" level="project" />
     <orderEntry type="library" name="com.alibaba:fastjson:1.2.56" level="project" />
     <orderEntry type="library" name="org.apache.poi:poi:4.0.1" level="project" />
     <orderEntry type="library" name="org.apache.poi:poi-scratchpad:4.0.1" level="project" />
     <orderEntry type="library" name="org.apache.poi:poi-ooxml:4.0.1" level="project" />
-    <orderEntry type="library" name="us.codecraft:webmagic-core:0.7.3" level="project" />
     <orderEntry type="library" name="neo4j" level="project" />
+    <orderEntry type="library" name="THUCTC" level="project" />
   </component>
 </module>
