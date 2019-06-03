@@ -3,7 +3,7 @@ package hit.zhou.graph;
 import hit.zhou.graph.basic.PassageNode;
 import hit.zhou.graph.basic.PassageTree;
 import hit.zhou.graph.helper.KeyWordExecutorHelper;
-import hit.zhou.graph.helper.KmeansParamBuildHelper;
+import hit.zhou.graph.helper.KmeansExecuteHelper;
 import hit.zhou.graph.helper.graph_build_helper.ComplexEntry;
 import hit.zhou.graph.helper.graph_build_helper.GraphBuildExecuteHelper;
 import hit.zhou.graph.tools.LtpBaseOpLocal;
@@ -47,7 +47,7 @@ public class KnowGraphBuild {
         Map<String, Vector<EntryType>> tailVectorsMap = new HashMap<>();
 
 
-        KmeansParamBuildHelper.passageNodes2Vectors(passageNodesLevel3,typeIntegerMap,headVectorsMap,tailVectorsMap);
+        KmeansExecuteHelper.passageNodes2Vectors(passageNodesLevel3,typeIntegerMap,headVectorsMap,tailVectorsMap);
 
         List<Cluster<EntryType>> clustersHead = new ArrayList<>();
         List<Cluster<EntryType>> clustersTail = new ArrayList<>();

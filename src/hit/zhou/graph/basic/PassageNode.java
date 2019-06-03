@@ -110,7 +110,7 @@ public class PassageNode extends File {
     public void nlpExecutor(LtpBaseOpLocal ltpBaseOpLocal, String nlpFilePath) throws IOException {
         String passageStr = FileUtil.readString(passagePath);
         List<String> sentenceStringList = new ArrayList<>();
-        String[] splitBySpace = passageStr.split("[　| ]+");
+        String[] splitBySpace = passageStr.split("\\p{Zs}+");
         for(String splitSentenceString:splitBySpace){
             List<String> splitSentenceStringList = new ArrayList<>();
             ltpBaseOpLocal.splitSentence(splitSentenceString,splitSentenceStringList);
@@ -118,7 +118,7 @@ public class PassageNode extends File {
         }
         List<Sentence> sentences = new ArrayList<>();
         for(String sentenceString:sentenceStringList){
-            if(sentenceString.equals("") || sentenceString.matches("[　| ]+"))
+            if(sentenceString.equals("") || sentenceString.matches("\\p{Zs}+"))
                 continue;
 //            sentenceString = sentenceString.replaceFirst(RE_PATTERN,"");
             sentences.add(transSentence(ltpBaseOpLocal, sentenceString));

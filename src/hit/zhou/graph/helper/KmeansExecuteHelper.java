@@ -8,13 +8,30 @@ import hit.zhou.graph.tools.FileUtil;
 import hit.zhou.graph.tools.kmeans.Cluster;
 import hit.zhou.graph.tools.kmeans.Vector;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class KmeansParamBuildHelper {
+public class KmeansExecuteHelper {
+    public static void saveClusters(List<Cluster<EntryType>> clusters,String clustersPath){
+        clusters.removeIf(cluster -> cluster.vectorsSize() == 0);
+        String clusterJsonString = JSON.toJSONString(clusters);
+        FileUtil.save(clustersPath,clusterJsonString.getBytes(),false);
+    }
+
+    public static List<Cluster<EntryType>> readClusters(String clustersPath) throws IOException {
+        File file = new File(clustersPath);
+        if(file.exists()){
+            String clusterJsonString = FileUtil.readString(clustersPath);
+            return JSON.parseObject(clusterJsonString,new TypeReference<List<Cluster<EntryType>>>(){});
+        }
+        return new ArrayList<>();
+    }
+
+
     public static void initClusters(final List<EntryType> typesLocation,List<Cluster<EntryType>> clusters){
         int dimension = typesLocation.size();
         int nBits = 1 << dimension;
@@ -59,7 +76,7 @@ public class KmeansParamBuildHelper {
         }
     }
 
-    private static void normal(Map<String, Vector<EntryType>> vectors, Map<EntryType, Float> typeNumberMap, EntryType type) {
+    protected static void normal(Map<String, Vector<EntryType>> vectors, Map<EntryType, Float> typeNumberMap, EntryType type) {
         for(Map.Entry<String, Vector<EntryType>> entry: vectors.entrySet()){
             float notNormal = entry.getValue().getDataByType(type);
             float totalNumber = typeNumberMap.get(type);
@@ -67,7 +84,7 @@ public class KmeansParamBuildHelper {
         }
     }
 
-    private static void countNumber(Map<EntryType, Float> typeNumberMap, List<Map.Entry<String, Float>> keyWordList, EntryType type) {
+    protected static void countNumber(Map<EntryType, Float> typeNumberMap, List<Map.Entry<String, Float>> keyWordList, EntryType type) {
         if(typeNumberMap.containsKey(type)){
             float number = typeNumberMap.get(type);
             typeNumberMap.put(type,number + keyWordList.size());
@@ -78,7 +95,7 @@ public class KmeansParamBuildHelper {
         }
     }
 
-    private static void buildVectors(Map<EntryType,Integer> typeIntegerMap, Map<String, Vector<EntryType>> vectors, List<Map.Entry<String, Float>> keyWordList, EntryType type) {
+    protected static void buildVectors(Map<EntryType, Integer> typeIntegerMap, Map<String, Vector<EntryType>> vectors, List<Map.Entry<String, Float>> keyWordList, EntryType type) {
         for(Map.Entry<String,Float> keyWord: keyWordList){
             if(vectors.containsKey(keyWord.getKey())){
                 float tempData = vectors.get(keyWord.getKey()).getDataByType(type);

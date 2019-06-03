@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Kmeans {
+
+
     public static <T extends Enum> void kmeans(Map<String, Vector<T>> vectors, List<Cluster<T>> clusters){
         do {
             for(Map.Entry<String, Vector<T>> entry:vectors.entrySet()){

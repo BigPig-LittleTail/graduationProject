@@ -17,7 +17,10 @@ import java.util.Map;
 public class Neo4jHelper {
     private static Neo4jHelper instance = null;
     private static GraphDatabaseService dbService;
-    private static final String FILE_PATH = "D:\\neo4j\\neo4j-community-3.5.5\\data\\databases\\graph.db\\";
+    private static final String FILE_PATH = "D:\\graduation\\graphDB\\0.6\\graph.db\\";
+//    private static final String FILE_PATH = "D:\\neo4j\\graph.all\\舆情\\0.5\\graph.db";
+
+
     private static final String KEY_STRING_WORD = "word";
     private static final String KEY_STRING_FEATURE = "feature";
     private static final String KEY_STRING_HEAD_VECTOR = "headVector";
@@ -25,6 +28,7 @@ public class Neo4jHelper {
 
 
     private Neo4jHelper(){
+        System.err.println(FILE_PATH);
         dbService = new GraphDatabaseFactory().newEmbeddedDatabase(new File(FILE_PATH));
         registerShutdownHook(dbService);
     }
@@ -44,6 +48,13 @@ public class Neo4jHelper {
         Runtime.getRuntime().addShutdownHook(new Thread(dbService::shutdown));
     }
 
+    public String coutRelationShip(){
+        String executeString = "MATCH p=()-->() RETURN count(p)";
+        try(Transaction tx = dbService.beginTx()) {
+            Result result = dbService.execute(executeString);
+            return  result.resultAsString();
+        }
+    }
 
     public void createComplexNode(ComplexEntry<EntryType> entry){
         Node node = getComplexNode(entry);

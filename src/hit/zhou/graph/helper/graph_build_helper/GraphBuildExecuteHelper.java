@@ -23,8 +23,8 @@ public class GraphBuildExecuteHelper {
 
         Map<String,ComplexEntry<EntryType>> wordStringMapComlpexEntry = new HashMap<>();
         for(Cluster<EntryType> cluster:headClusters){
-            int typesSize = cluster.getTypesSize();
-            int vectorsSize = cluster.getVectorsSize();
+            int typesSize = cluster.typeSize();
+            int vectorsSize = cluster.vectorsSize();
             for(int i = 0;i < vectorsSize;i++){
                 Vector<EntryType> vector = cluster.get(i);
                 if(!wordStringMapComlpexEntry.containsKey(vector.getWordString())){
@@ -44,8 +44,8 @@ public class GraphBuildExecuteHelper {
         }
 
         for(Cluster<EntryType> cluster:tailClusters){
-            int typesSize = cluster.getTypesSize();
-            int vectorsSize = cluster.getVectorsSize();
+            int typesSize = cluster.typeSize();
+            int vectorsSize = cluster.vectorsSize();
             for(int i = 0;i < vectorsSize;i++){
                 Vector<EntryType> vector = cluster.get(i);
                 if(wordStringMapComlpexEntry.containsKey(vector.getWordString())) {
@@ -69,8 +69,8 @@ public class GraphBuildExecuteHelper {
     public static Map<String,ComplexEntry<EntryType>> MergeHeadAndTailClusters(Map<EntryType,Integer> entryTypeIntegerMap, List<Cluster<EntryType>> headClusters, List<Cluster<EntryType>> tailClusters){
         Map<String,ComplexEntry<EntryType>> wordStringMapComlpexEntry = new HashMap<>();
         for(Cluster<EntryType> cluster:headClusters){
-            int typesSize = cluster.getTypesSize();
-            int vectorsSize = cluster.getVectorsSize();
+            int typesSize = cluster.typeSize();
+            int vectorsSize = cluster.vectorsSize();
             for(int i = 0;i < vectorsSize;i++){
                 Vector<EntryType> vector = cluster.get(i);
                 if(!wordStringMapComlpexEntry.containsKey(vector.getWordString())){
@@ -90,8 +90,8 @@ public class GraphBuildExecuteHelper {
         }
 
         for(Cluster<EntryType> cluster:tailClusters){
-            int typesSize = cluster.getTypesSize();
-            int vectorsSize = cluster.getVectorsSize();
+            int typesSize = cluster.typeSize();
+            int vectorsSize = cluster.vectorsSize();
             for(int i = 0;i < vectorsSize;i++){
                 Vector<EntryType> vector = cluster.get(i);
                 if(!wordStringMapComlpexEntry.containsKey(vector.getWordString())){

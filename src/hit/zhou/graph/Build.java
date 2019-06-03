@@ -2,8 +2,13 @@ package hit.zhou.graph;
 
 import hit.zhou.graph.basic.PassageNode;
 import hit.zhou.graph.basic.PassageTree;
-import hit.zhou.graph.helper.KeyWordExecutorHelper;
+import hit.zhou.graph.helper.KmeansExecuteHelper;
+import hit.zhou.graph.helper.graph_build_helper.ComplexEntry;
+import hit.zhou.graph.helper.graph_build_helper.GraphBuildExecuteHelper;
+import hit.zhou.graph.helper.graph_build_helper.Neo4jHelper;
 import hit.zhou.graph.tools.LtpBaseOpLocal;
+import hit.zhou.graph.tools.kmeans.Cluster;
+import hit.zhou.graph.tools.kmeans.Vector;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,30 +70,82 @@ public class Build {
         List<PassageNode> passageNodesLevel3 = passageTree.getPassageNodeListByLevel(3);
 
 
-        KeyWordExecutorHelper.keyWord(passageNodesLevel3,passageNodesLevel3,false);
+//        KeyWordExecutorHelper.keyWord(passageNodesLevel3,passageNodesLevel3,false);
 
-//        Map<String, Vector<EntryType>> headVectorsMap = new HashMap<>();
-//        Map<String, Vector<EntryType>> tailVectorsMap = new HashMap<>();
-//        List<Cluster<EntryType>> clustersHead = new ArrayList<>();
-//        List<Cluster<EntryType>> clustersTail = new ArrayList<>();
-//
-//        KmeansParamBuildHelper.passageNodes2Vectors(passageNodesLevel3,typeIntegerMap,headVectorsMap,tailVectorsMap);
-//        KmeansParamBuildHelper.initClusters(typesLocation,clustersHead);
-//        KmeansParamBuildHelper.initClusters(typesLocation,clustersTail);
-//
+        Map<String, Vector<EntryType>> headVectorsMap = new HashMap<>();
+        Map<String, Vector<EntryType>> tailVectorsMap = new HashMap<>();
+        List<Cluster<EntryType>> clustersHead = new ArrayList<>();
+        List<Cluster<EntryType>> clustersTail = new ArrayList<>();
+
+        clustersHead  = KmeansExecuteHelper.readClusters("D:\\graduation\\graphMidResult\\cluster\\clusterHead");
+        clustersTail = KmeansExecuteHelper.readClusters("D:\\graduation\\graphMidResult\\cluster\\clusterTail");
+
+        /**
+         * 第一次聚类
+         * */
+//        KmeansExecuteHelper.passageNodes2Vectors(passageNodesLevel3,typeIntegerMap,headVectorsMap,tailVectorsMap);
+//        KmeansExecuteHelper.initClusters(typesLocation,clustersHead);
+//        KmeansExecuteHelper.initClusters(typesLocation,clustersTail);
 //        Kmeans.kmeans(headVectorsMap,clustersHead);
 //        Kmeans.kmeans(tailVectorsMap,clustersTail);
-//
-//        for(Cluster cluster:clustersHead){
-//            cluster.sub(0.1f);
+//        KmeansExecuteHelper.saveClusters(clustersHead,"D:\\graduation\\graphMidResult\\cluster\\clusterHead");
+//        KmeansExecuteHelper.saveClusters(clustersTail,"D:\\graduation\\graphMidResult\\cluster\\clusterTail");
+
+
+        /**
+         * 实体抽取结果
+         * ****/
+//        System.out.println(clustersHead.size());
+//        for(Cluster<EntryType> cluster:clustersHead){
+////            cluster.sub(0.6f);
+//            if(cluster.getVectors().size() > 500){
+//                System.out.println();System.out.println();
+//                for(EntryType entryType:cluster.getTypes()){
+//                    System.out.print(entryType + ",");
+//                }
+//                System.out.println(cluster.getVectors().size());
+//                for(int i = 0;i<10;i++){
+//                    System.out.print(cluster.getVectors().get(i).getWordString() + ",");
+//                }
+//            }
 //        }
+//        System.out.println(); System.out.println(); System.out.println();
 //
-//        for(Cluster cluster:clustersTail){
-//            cluster.sub(0.1f);
+//        System.out.println(clustersTail.size());
+//        for(Cluster<EntryType> cluster:clustersTail){
+////            cluster.sub(0.6f);
+//            if(cluster.getVectors().size() > 500){
+//                System.out.println();System.out.println();
+//                for(EntryType entryType:cluster.getTypes()){
+//                    System.out.print(entryType + ",");
+//                }
+//                System.out.println(cluster.getVectors().size());
+//                for(int i = 0;i<10;i++){
+//                    System.out.print(cluster.getVectors().get(i).getWordString() + ",");
+//                }
+//            }
+//
 //        }
 
-//        Map<String, ComplexEntry<EntryType>> word2ComplexEntry = GraphBuildExecuteHelper.MergeHeadAndTailClustersTest(typeIntegerMap,clustersHead,clustersTail);
-//        GraphBuildExecuteHelper.graphBuild(word2ComplexEntry,passageNodesLevel3);
+
+
+        for(Cluster<EntryType> cluster:clustersHead) {
+            cluster.sub(0.3f);
+        }
+
+        for(Cluster<EntryType> cluster:clustersTail){
+            cluster.sub(0.3f);
+        }
+
+        Map<String, ComplexEntry<EntryType>> word2ComplexEntry = GraphBuildExecuteHelper.MergeHeadAndTailClustersTest(typeIntegerMap,clustersHead,clustersTail);
+
+
+
+        System.out.println(word2ComplexEntry.size());
+        String count = Neo4jHelper.newInstance().coutRelationShip();
+        System.out.println(count);
+
+        //        GraphBuildExecuteHelper.graphBuild(word2ComplexEntry,passageNodesLevel3);
 
 
         return;

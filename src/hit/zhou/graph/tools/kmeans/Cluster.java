@@ -1,13 +1,48 @@
 package hit.zhou.graph.tools.kmeans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class Cluster<T extends Enum> {
+public class Cluster<T extends Enum> implements Serializable {
     private float[] center;
     private List<Vector<T>> vectors;
     private List<T> types;
+
+    public Cluster(float[] center, List<T> types,List<Vector<T>> vectors){
+        this.center = new float[center.length];
+        for(int i = 0;i<center.length;i++){
+            this.center[i] = center[i];
+        }
+        this.types = types;
+        this.vectors = vectors;
+    }
+
+    public float[] getCenter() {
+        return center;
+    }
+
+    public List<T> getTypes() {
+        return types;
+    }
+
+    public List<Vector<T>> getVectors() {
+        return vectors;
+    }
+
+    public void setTypes(List<T> types) {
+        this.types = types;
+    }
+
+    public void setCenter(float[] center) {
+        this.center = center;
+    }
+
+    public void setVectors(List<Vector<T>> vectors) {
+        this.vectors = vectors;
+    }
+
 
     public Cluster(float[] center, List<T> types){
         this.center = new float[center.length];
@@ -22,11 +57,11 @@ public class Cluster<T extends Enum> {
         return types.get(index);
     }
 
-    public int getTypesSize(){
+    public int typeSize(){
         return types.size();
     }
 
-    public int getVectorsSize(){
+    public int vectorsSize(){
         return vectors.size();
     }
 
@@ -43,7 +78,7 @@ public class Cluster<T extends Enum> {
     }
 
     public void sub(float percent){
-        int last = (int)(percent * vectors.size());
+        int last = (int)Math.ceil(percent * vectors.size());
         System.out.println(last);
         if(last <= vectors.size()){
             vectors = vectors.subList(0,last);
@@ -52,6 +87,10 @@ public class Cluster<T extends Enum> {
 
 
     public float recaculateCenter(){
+        if(vectors.isEmpty()){
+            return 1f;
+        }
+
         float[] newCenter = new float[center.length];
         float[] oldCenter = this.center;
         for(Vector<T> vector:vectors){

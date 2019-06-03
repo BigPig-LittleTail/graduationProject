@@ -17,7 +17,27 @@ public class Vector<T extends Enum> {
         return wordString;
     }
 
-    public void setDataByIndex(float data,int index){
+    public float[] getVectorData() {
+        return vectorData;
+    }
+
+    public Map<T, Integer> getTypeMapIndex() {
+        return typeMapIndex;
+    }
+
+    public void setWordString(String wordString) {
+        this.wordString = wordString;
+    }
+
+    public void setVectorData(float[] vectorData) {
+        this.vectorData = vectorData;
+    }
+
+    public void setTypeMapIndex(Map<T, Integer> typeMapIndex) {
+        this.typeMapIndex = typeMapIndex;
+    }
+
+    public void setDataByIndex(float data, int index){
         this.vectorData[index] = data;
     }
 

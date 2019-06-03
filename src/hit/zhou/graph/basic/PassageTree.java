@@ -320,10 +320,6 @@ public class PassageTree {
         }
     }
 
-    public interface Txxx<T>{
-        T create(String path);
-    }
-
     private static class Executor{
         public interface ExecutorInterface<T,U,R>{
             void run(T t,U u,R r);
